@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Add Entry - Personal Diary{% endblock %}
+
+{% block content %}
+<div style="max-width: 800px; margin: 0 auto;">
+    <div class="card">
+        <h1 style="margin-bottom: 32px; background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+            ✍️ Write a New Entry
+        </h1>
+
+        <form method="POST">
+            <div class="form-group">
+                <label for="title">Title (Optional)</label>
+                <input 
+                    type="text" 
+                    id="title" 
+                    name="title"
+                    placeholder="Give your entry a title (optional)"
+                    maxlength="255"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="content">Your Thoughts</label>
+                <textarea 
+                    id="content" 
+                    name="content" 
+                    required
+                    placeholder="Share your thoughts, feelings, and memories... There's no word limit!"
+                ></textarea>
+            </div>
+
+            <div style="display: flex; gap: 12px;">
+                <button type="submit" class="btn btn-primary">Save Entry</button>
+                <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Auto-save to localStorage as user types (optional enhancement)
+    const textarea = document.getElementById('content');
+    const titleInput = document.getElementById('title');
+    
+    // Load from localStorage if exists
+    const savedContent = localStorage.getItem('draft_content');
+    const savedTitle = localStorage.getItem('draft_title');
+    
+    if (savedContent) {
+        textarea.value = savedContent;
+    }
+    if (savedTitle) {
+        titleInput.value = savedTitle;
+    }
+    
+    // Save to localStorage on input
+    textarea.addEventListener('input', () => {
+        localStorage.setItem('draft_content', textarea.value);
+    });
+    
+    titleInput.addEventListener('input', () => {
+        localStorage.setItem('draft_title', titleInput.value);
+    });
+    
+    // Clear localStorage on successful submit
+    document.querySelector('form').addEventListener('submit', () => {
+        localStorage.removeItem('draft_content');
+        localStorage.removeItem('draft_title');
+    });
+</script>
+{% endblock %}

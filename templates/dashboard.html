@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Personal Diary{% endblock %}
+
+{% block content %}
+<div class="dashboard-header">
+    <h1 class="dashboard-title">📔 {{ current_user.username }}'s Diary</h1>
+    <p class="dashboard-subtitle">Your personal space for thoughts and memories</p>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-value">🔥 {{ current_streak }}</div>
+        <div class="stat-label">Current Streak (days)</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-value">⭐ {{ longest_streak }}</div>
+        <div class="stat-label">Longest Streak</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-value">✍️ {{ total_entries }}</div>
+        <div class="stat-label">Total Entries</div>
+    </div>
+</div>
+
+{% if entries_by_month %}
+    {% for month_key, month_data in entries_by_month %}
+    <div class="month-section">
+        <h2 class="month-header">{{ month_data.label }}</h2>
+        <div class="entries-container">
+            {% for entry in month_data.entries %}
+            <a href="{{ url_for('view_entry', entry_id=entry.id) }}" class="entry-card">
+                <div class="entry-header">
+                    <div class="entry-date">{{ entry.created_at.strftime('%A, %B %d, %Y') }}</div>
+                    {% if entry.title %}
+                    <h3 class="entry-title">{{ entry.title }}</h3>
+                    {% else %}
+                    <h3 class="entry-title">Untitled Entry</h3>
+                    {% endif %}
+                </div>
+                <div class="entry-body">
+                    <p class="entry-preview">{{ entry.get_preview() }}</p>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+{% else %}
+<div class="card">
+    <div class="empty-state">
+        <div class="empty-state-icon">📝</div>
+        <h2 class="empty-state-title">No entries yet</h2>
+        <p class="empty-state-message">Start your diary journey by creating your first entry!</p>
+        <a href="{{ url_for('add_entry') }}" class="btn btn-primary">Write Your First Entry</a>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

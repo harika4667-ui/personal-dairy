@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Server Error - Personal Diary{% endblock %}
+
+{% block content %}
+<div style="max-width: 600px; margin: 0 auto; text-align: center; padding: 60px 20px;">
+    <div class="empty-state">
+        <div class="empty-state-icon" style="font-size: 96px;">⚠️</div>
+        <h1 class="empty-state-title" style="font-size: 48px;">500</h1>
+        <p class="empty-state-title">Server Error</p>
+        <p class="empty-state-message">Sorry, something went wrong. Please try again later.</p>
+        <a href="{{ url_for('dashboard') if current_user else url_for('login') }}" class="btn btn-primary">← Go Back</a>
+    </div>
+</div>
+{% endblock %}

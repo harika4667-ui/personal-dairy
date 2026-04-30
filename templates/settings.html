@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block title %}Settings - Personal Diary{% endblock %}
+
+{% block content %}
+<div style="max-width: 800px; margin: 0 auto;">
+    <h1 style="margin-bottom: 32px; background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+        ⚙️ Settings
+    </h1>
+
+    <div class="settings-grid">
+        <!-- Account Info -->
+        <div class="settings-card">
+            <h2 class="settings-card-title">👤 Account Information</h2>
+            <div style="margin-bottom: 16px;">
+                <p style="color: #7f8c8d; font-size: 14px; margin-bottom: 8px;">Username</p>
+                <p style="font-size: 16px; font-weight: 600;">{{ current_user.username }}</p>
+            </div>
+            <div>
+                <p style="color: #7f8c8d; font-size: 14px; margin-bottom: 8px;">Email</p>
+                <p style="font-size: 16px; font-weight: 600;">{{ current_user.email }}</p>
+            </div>
+            <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(0, 0, 0, 0.1); color: #7f8c8d; font-size: 12px;">
+                Member since {{ current_user.created_at.strftime('%B %d, %Y') }}
+            </div>
+        </div>
+
+        <!-- Streak Info -->
+        <div class="settings-card">
+            <h2 class="settings-card-title">🔥 Your Streak</h2>
+            <div style="margin-bottom: 16px;">
+                <p style="color: #7f8c8d; font-size: 14px; margin-bottom: 8px;">Current Streak</p>
+                <p style="font-size: 32px; font-weight: 700; background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                    {{ streak.current_streak }} days
+                </p>
+            </div>
+            <div>
+                <p style="color: #7f8c8d; font-size: 14px; margin-bottom: 8px;">Longest Streak</p>
+                <p style="font-size: 24px; font-weight: 700;">⭐ {{ streak.longest_streak }} days</p>
+            </div>
+            {% if streak.last_entry_date %}
+            <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(0, 0, 0, 0.1); color: #7f8c8d; font-size: 12px;">
+                Last entry: {{ streak.last_entry_date.strftime('%B %d, %Y') }}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Change Password -->
+    <div class="card" style="max-width: 500px; margin-top: 32px;">
+        <h2 style="margin-bottom: 24px; color: #2c3e50;">🔐 Change Password</h2>
+        <form method="POST" action="{{ url_for('change_password') }}">
+            <div class="form-group">
+                <label for="old_password">Current Password</label>
+                <input 
+                    type="password" 
+                    id="old_password" 
+                    name="old_password" 
+                    required
+                    placeholder="Enter your current password"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="new_password">New Password</label>
+                <input 
+                    type="password" 
+                    id="new_password" 
+                    name="new_password" 
+                    required
+                    minlength="6"
+                    placeholder="At least 6 characters"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="confirm_password">Confirm New Password</label>
+                <input 
+                    type="password" 
+                    id="confirm_password" 
+                    name="confirm_password" 
+                    required
+                    placeholder="Confirm your new password"
+                >
+            </div>
+
+            <div style="display: flex; gap: 12px;">
+                <button type="submit" class="btn btn-primary">Update Password</button>
+                <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Danger Zone -->
+    <div class="card" style="max-width: 500px; margin-top: 32px; border: 2px solid #ff9a9e;">
+        <h2 style="margin-bottom: 12px; color: #7d2c2c;">⚠️ Danger Zone</h2>
+        <p style="color: #7f8c8d; margin-bottom: 16px;">
+            Logging out will end your current session. You'll need to log in again to access your diary.
+        </p>
+        <form action="{{ url_for('logout') }}" method="post">
+            <button type="submit" class="btn btn-danger btn-block">Logout</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
